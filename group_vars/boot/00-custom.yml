@@ -1,0 +1,4 @@
+efi_x86_64_seeder_name: "{{ distro_item.name }}"
+efi_x86_64_seeder_path: "{{ install_iso_mount_base_path }}/{{ distro_item.arch }}/{{ distro_item.group }}/ext/{{ iso_basename }}"
+efi_aarch64_seeder_name: "{{ distro_item.name }}"
+efi_aarch64_seeder_path: "{{ install_iso_mount_base_path }}/{{ distro_item.arch }}/{{ distro_item.group }}/ext/{{ iso_basename }}"

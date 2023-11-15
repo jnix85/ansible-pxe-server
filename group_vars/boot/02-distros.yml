@@ -1,0 +1,180 @@
+distros:
+  - name: jammy
+    family: ubuntu 
+    version: 22.04 
+    arch: x86_64
+    dist: jammy
+    group: ubuntu 
+    displayName: Ubuntu 22.04 LTS Server 
+    bios_kernel: casper/vmlinuz 
+    bios_initrd: casper/initrd 
+    efi_kernel: casper/vmlinuz
+    efi_initrd: casper/initrd
+    efi_loader_path: EFI/boot/
+    isoURL: http://10.1.0.2/iso/ubuntu-22.04.3-live-server-amd64.iso
+    protocol: http 
+    boot_methods: 
+      - BIOS
+      - EFI
+    efi_options:
+      - gui-install
+  - name: lunar
+    family: ubuntu 
+    version: 23.04 
+    arch: x86_64
+    dist: lunar
+    group: ubuntu 
+    displayName: Ubuntu 23.04 LTS Server 
+    bios_kernel: casper/vmlinuz 
+    bios_initrd: casper/initrd 
+    efi_kernel: casper/vmlinuz
+    efi_initrd: casper/initrd
+    efi_loader_path: EFI/boot/
+    isoURL: http://10.1.0.2/iso/ubuntu-23.04-live-server-amd64.iso
+    protocol: http 
+    boot_methods: 
+      - BIOS
+      - EFI
+    efi_options:
+      - gui-install
+  - name: mantic
+    family: ubuntu 
+    version: 23.10
+    arch: x86_64
+    dist: mantic
+    group: ubuntu 
+    displayName: Ubuntu 23.10 LTS Server 
+    bios_kernel: casper/vmlinuz 
+    bios_initrd: casper/initrd 
+    efi_kernel: casper/vmlinuz
+    efi_initrd: casper/initrd
+    efi_loader_path: EFI/boot/
+    isoURL: http://10.1.0.2/iso/ubuntu-23.10-live-server-amd64.iso
+    protocol: http 
+    boot_methods: 
+      - BIOS
+      - EFI
+    efi_options:
+      - gui-install
+  - name: alma8
+    family: rhel 
+    version: 8.8
+    arch: x86_64
+    dist: 8
+    group: alma 
+    displayName: Alma Linux 8.8
+    bios_kernel: images/pxeboot/vmlinuz
+    bios_initrd: images/pxeboot/initrd.img
+    efi_kernel: images/pxeboot/vmlinuz
+    efi_initrd: images/pxeboot/initrd.img
+    efi_loader_path: EFI/BOOT/ # trailing slash is important!
+    isoURL: http://10.1.0.2/iso/AlmaLinux-8.8-x86_64-boot.iso
+    protocol: ftp
+    boot_methods:
+      - EFI
+    efi_options:
+      - gui-install
+      - text-install
+      - linux-rescue
+  - name: alma9
+    family: rhel 
+    version: 9.2
+    arch: x86_64
+    dist: 9
+    group: alma 
+    displayName: Alma Linux 9.2
+    bios_kernel: images/pxeboot/vmlinuz
+    bios_initrd: images/pxeboot/initrd.img
+    efi_kernel: images/pxeboot/vmlinuz
+    efi_initrd: images/pxeboot/initrd.img
+    efi_loader_path: EFI/BOOT/ # trailing slash is important!
+    isoURL: http://10.1.0.2/iso/AlmaLinux-9.2-x86_64-boot.iso
+    protocol: ftp
+    boot_methods:
+      - EFI
+    efi_options:
+      - gui-install
+      - text-install
+      - linux-rescue
+  - name: rocky8
+    family: rhel 
+    version: 8.8
+    arch: x86_64
+    dist: 8
+    group: rocky 
+    displayName: Rocky Linux 8.8
+    bios_kernel: images/pxeboot/vmlinuz
+    bios_initrd: images/pxeboot/initrd.img
+    efi_kernel: images/pxeboot/vmlinuz
+    efi_initrd: images/pxeboot/initrd.img
+    efi_loader_path: EFI/BOOT/ # trailing slash is important!
+    isoURL: http://10.1.0.2/iso/Rocky-8.8-x86_64-boot.iso
+    protocol: ftp
+    boot_methods:
+      - EFI
+    efi_options:
+      - gui-install
+      - text-install
+      - linux-rescue
+  - name: rocky9
+    family: rhel 
+    version: 9.2
+    arch: x86_64
+    dist: 9
+    group: rocky 
+    displayName: rocky Linux 9.2
+    bios_kernel: images/pxeboot/vmlinuz
+    bios_initrd: images/pxeboot/initrd.img
+    efi_kernel: images/pxeboot/vmlinuz
+    efi_initrd: images/pxeboot/initrd.img
+    efi_loader_path: EFI/BOOT/ # trailing slash is important!
+    isoURL: http://10.1.0.2/iso/Rocky-9.2-x86_64-boot.iso
+    protocol: ftp
+    boot_methods:
+      - EFI
+    efi_options:
+      - gui-install
+      - text-install
+      - linux-rescue
+  - name: rhel8
+    displayName: Red Hat Enterprise Linux 8.8
+    family: rhel 
+    version: 8.8
+    arch: x86_64
+    dist: 8
+    group: rhel
+    bios_kernel: images/pxeboot/vmlinuz
+    bios_initrd: images/pxeboot/initrd.img
+    efi_kernel: images/pxeboot/vmlinuz
+    efi_initrd: images/pxeboot/initrd.img
+    efi_loader_path: EFI/BOOT/ # trailing slash is important!
+    # Either isoURL or isoSrcPath need to be provided
+    isoURL: http://10.1.0.2/iso/rhel-8.8-x86_64-boot.iso
+    protocol: ftp
+    boot_methods:
+      - BIOS
+      - EFI
+    efi_options:
+      - gui-install
+      - text-install
+      - linux-rescue
+
+  - name: rhel9
+    displayName: Red Hat Enterprise Linux 9.2
+    family: rhel 
+    version: 9.2
+    arch: x86_64
+    dist: 9
+    group: rhel
+    efi_kernel: images/pxeboot/vmlinuz
+    efi_initrd: images/pxeboot/initrd.img
+    efi_loader_seed: true
+    efi_loader_path: EFI/BOOT/ 
+    isoURL: http://10.1.0.2/iso/rhel-9.2-x86_64-boot.iso
+    protocol: http
+    boot_methods:
+      - EFI
+    efi_options:
+      - gui-install
+      - text-install
+      - linux-rescue

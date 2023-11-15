@@ -1,0 +1,58 @@
+# Basics, don't really turn these off
+    enable_tftp: true
+    enable_ftp: true
+    enable_http: true
+    enable_dhcpd: true
+    enable_nfs: true
+
+    # [Optional] If you want to use https, you need to generate a cert
+    enable_https: false
+
+    # Configure these
+    pxe_server_name: pxe.home.jpconsulted.com
+    pxe_server_ip: 10.1.0.9
+
+    vsftpd_banner_message: Welcome to PXE Boot FTP Service
+    pxe_menu_x86_bios_title: BIOS PXE Boot x86_64 
+
+    domain_name: home.jpconsulted.com
+    domain_name_servers: "10.1.0.2, 10.1.0.3"
+    gateway_router_ip: 10.1.0.1
+    ntp_server_ip: 10.1.0.2
+    dhcp_subnet: 10.1.0.0
+    dhcp_netmask: 255.255.255.0
+    dhcp_range_start: 10.1.0.100
+    dhcp_range_end: 10.1.0.250
+    global_base_path: /var/ftp/pub
+    httpd_document_root: "{{ global_base_path }}"
+    nfs_export_path: "{{ global_base_path }}"
+    tftp_server_sub_path: pxe/tftpboot
+    install_iso_mount_sub_path: pxe/install
+    install_iso_mount_base_path: "{{ global_base_path }}/{{ install_iso_mount_sub_path }}"
+    tftp_server_base_path: "{{ global_base_path }}/{{ tftp_server_sub_path }}"
+
+    ## DHCPD Options
+    default_lease_time: 3600
+    max_lease_time: 7200
+
+    general_base_packages:
+      - wget
+      - nano
+      - curl
+      - openssl
+      - firewalld
+      - bash-completion
+      - git
+      - cockpit
+      - gzip
+      - unzip
+      - nmap
+      - syslinux
+
+    efi_detected: false
+    efi_x86_64_detected: false
+    efi_aarch64_detected: false
+    efi_x86_64_seeder_detected: false
+    efi_aarch64_seeder_detected: false
+    efi_x86_64_seeder_name: ''
+    efi_aarch64_seeder_name: ''
