@@ -1,6 +1,6 @@
 ---
 - name: Configure a RHEL host as a robust PXE host
-  hosts: pxe
+  hosts: all
   become: true
 
   vars:
@@ -15,20 +15,20 @@
     enable_https: false
 
     # Configure these
-    pxe_server_name: pxe.home.jpconsulted.com
-    pxe_server_ip: 10.1.0.16
+    pxe_server_name: pxe.kemo.labs
+    pxe_server_ip: 192.168.42.16
 
-    vsftpd_banner_message: Welcome to FTP service.
-    pxe_menu_x86_bios_title: PXE Boot x86_64 BIOS
+    vsftpd_banner_message: Welcome to Kemo Labs FTP service.
+    pxe_menu_x86_bios_title: Kemo Labs PXE Boot x86_64 BIOS
 
-    domain_name: home.jpconsulted.com
-    domain_name_servers: "10.1.0.2, 10.1.0.3"
-    gateway_router_ip: 10.1.0.1
-    ntp_server_ip: 10.1.0.2
-    dhcp_subnet: 10.1.0.0
+    domain_name: kemo.labs
+    domain_name_servers: "192.168.42.9, 192.168.42.10"
+    gateway_router_ip: 192.168.42.1
+    ntp_server_ip: 192.168.42.48
+    dhcp_subnet: 192.168.42.0
     dhcp_netmask: 255.255.255.0
-    dhcp_range_start: 10.1.0.100
-    dhcp_range_end: 10.1.0.250
+    dhcp_range_start: 192.168.42.100
+    dhcp_range_end: 192.168.42.250
 
     distros:
     # Pathing: /var/ftp/pub/pxe/install/{{ arch }}/{{ group }}/{ext,iso}/{{ isoURL | basename }}
@@ -60,8 +60,6 @@
     - name: ubuntu2204serverx8664
       displayName: Ubuntu 22.04 LTS Server
       group: ubuntu22.04
-      bios_kernel: casper/vmlinuz # where on the mounted ISO file is the kernel located
-      bios_initrd: casper/initrd # where on the mounted ISO file is the initrd located
       efi_kernel: casper/vmlinuz
       efi_initrd: casper/initrd
       arch: x86_64
@@ -69,46 +67,60 @@
       isoURL: https://releases.ubuntu.com/22.04.2/ubuntu-22.04.2-live-server-amd64.iso
       protocol: http
       boot_methods:
-        - BIOS
         - EFI
       efi_options:
         - gui-install
 
-    # # Rocky 9.1 - x86_64
-    # - name: rocky91x8664
-    #   displayName: Rocky Linux 9.1
-    #   group: rocky91
-    #   efi_kernel: images/pxeboot/vmlinuz
-    #   efi_initrd: images/pxeboot/initrd.img
-    #   arch: x86_64
-    #   family: rhel
-    #   isoURL: https://download.rockylinux.org/pub/rocky/9/isos/x86_64/Rocky-9.1-x86_64-dvd.iso
-    #   protocol: ftp
-    #   boot_methods:
-    #     - EFI
-    #   efi_options:
-    #     - gui-install
-    #     - text-install
-    #     - linux-rescue
+    # Ubuntu Server 22.04 - ARM64
+    - name: ubuntu2204serverarm64
+      displayName: Ubuntu 22.04 LTS Server
+      group: ubuntu22.04
+      efi_kernel: casper/vmlinuz
+      efi_initrd: casper/initrd
+      arch: aarch64
+      family: ubuntu
+      isoURL: https://cdimage.ubuntu.com/releases/22.04/release/ubuntu-22.04.2-live-server-arm64.iso
+      protocol: http
+      boot_methods:
+        - EFI
+      efi_options:
+        - gui-install
 
-    # # Rocky 9.1 - ARM64
-    # - name: rocky91arm64
-    #   displayName: Rocky Linux 9.1
-    #   group: rocky91
-    #   efi_kernel: images/pxeboot/vmlinuz
-    #   efi_initrd: images/pxeboot/initrd.img
-    #   arch: aarch64
-    #   family: rhel
-    #   isoURL: https://download.rockylinux.org/pub/rocky/9/isos/aarch64/Rocky-9.1-aarch64-dvd.iso
-    #   protocol: http
-    #   boot_methods:
-    #     - EFI
-    #   efi_options:
-    #     - gui-install
-    #     - text-install
-    #     - linux-rescue
+    # Rocky 9.1 - x86_64
+    - name: rocky91x8664
+      displayName: Rocky Linux 9.1
+      group: rocky91
+      efi_kernel: images/pxeboot/vmlinuz
+      efi_initrd: images/pxeboot/initrd.img
+      arch: x86_64
+      family: rhel
+      isoURL: https://download.rockylinux.org/pub/rocky/9/isos/x86_64/Rocky-9.1-x86_64-dvd.iso
+      protocol: ftp
+      boot_methods:
+        - EFI
+      efi_options:
+        - gui-install
+        - text-install
+        - linux-rescue
 
-    - name: rhel89x8664
+    # Rocky 9.1 - ARM64
+    - name: rocky91arm64
+      displayName: Rocky Linux 9.1
+      group: rocky91
+      efi_kernel: images/pxeboot/vmlinuz
+      efi_initrd: images/pxeboot/initrd.img
+      arch: aarch64
+      family: rhel
+      isoURL: https://download.rockylinux.org/pub/rocky/9/isos/aarch64/Rocky-9.1-aarch64-dvd.iso
+      protocol: http
+      boot_methods:
+        - EFI
+      efi_options:
+        - gui-install
+        - text-install
+        - linux-rescue
+
+    - name: rhel86x8664
       displayName: Red Hat Enterprise Linux 8.6
       group: rhel86
       bios_kernel: images/pxeboot/vmlinuz
@@ -128,9 +140,46 @@
         - text-install
         - linux-rescue
 
-    - name: rhel93x8664
-      displayName: Red Hat Enterprise Linux 9.3
-      group: rhel93
+    - name: rhel86arm64
+      displayName: Red Hat Enterprise Linux 8.6
+      group: rhel86
+      efi_kernel: images/pxeboot/vmlinuz
+      efi_initrd: images/pxeboot/initrd.img
+      arch: aarch64
+      family: rhel
+      # Either isoURL or isoSrcPath need to be provided
+      isoSrcPath: /mnt/nfs-isos/rhel8.6-aarch64.iso
+      protocol: http
+      boot_methods:
+        - EFI
+      efi_options:
+        - gui-install
+        - text-install
+        - linux-rescue
+
+    - name: rhel87x8664
+      displayName: Red Hat Enterprise Linux 8.7
+      group: rhel87
+      bios_kernel: images/pxeboot/vmlinuz
+      bios_initrd: images/pxeboot/initrd.img
+      efi_kernel: images/pxeboot/vmlinuz
+      efi_initrd: images/pxeboot/initrd.img
+      arch: x86_64
+      family: rhel
+      # Either isoURL or isoSrcPath need to be provided
+      isoSrcPath: /mnt/nfs-isos/rhel8.7-x86_64.iso
+      protocol: http
+      boot_methods:
+        - BIOS
+        - EFI
+      efi_options:
+        - gui-install
+        - text-install
+        - linux-rescue
+
+    - name: rhel91x8664
+      displayName: Red Hat Enterprise Linux 9.1
+      group: rhel91
       efi_kernel: images/pxeboot/vmlinuz
       efi_initrd: images/pxeboot/initrd.img
       arch: x86_64
@@ -138,7 +187,7 @@
       efi_loader_path: EFI/BOOT/ # trailing slash is important!
       family: rhel
       # Either isoURL or isoSrcPath need to be provided
-      isoSrcPath: /srv/iso/rhel-9.3-x86_64-boot.iso
+      isoSrcPath: /mnt/nfs-isos/rhel9.1-x86_64.iso
       protocol: http
       boot_methods:
         - EFI
@@ -148,8 +197,8 @@
         - linux-rescue
 
     - name: rhel91arm64
-      displayName: Red Hat Enterprise Linux 9.3
-      group: rhel93
+      displayName: Red Hat Enterprise Linux 9.1
+      group: rhel91
       efi_kernel: images/pxeboot/vmlinuz
       efi_initrd: images/pxeboot/initrd.img
       arch: aarch64
@@ -157,7 +206,7 @@
       efi_loader_path: EFI/BOOT/ # trailing slash is important!
       family: rhel
       # Either isoURL or isoSrcPath need to be provided
-      isoSrcPath: /srv/iso/rhel-9.3-aarch64-boot.iso
+      isoSrcPath: /mnt/nfs-isos/rhel9.1-aarch64.iso
       protocol: http
       boot_methods:
         - EFI

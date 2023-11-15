@@ -1,0 +1,182 @@
+---
+- name: Template the DHCP Configuration File
+  when: enable_dhcpd
+  ansible.builtin.template:
+    src: dhcpd.conf.j2
+    dest: /etc/dhcp/dhcpd.conf
+    owner: root
+    group: root
+    mode: 0644
+    backup: true
+  register: dhcpd_conf_templating
+- name: Allow DHCP through the firewall
+  when: enable_dhcpd
+  ansible.posix.firewalld:
+    service: "{{ fw_items }}"
+    permanent: yes
+    state: enabled
+  loop:
+    - dhcp
+  loop_control:
+    loop_var: fw_items
+- name: Enable and Start DHCPD
+  when: enable_dhcpd
+  ansible.builtin.service:
+    name: dhcpd
+    state: started
+    enabled: yes
+- name: Restart the DHCPD service if the configuration file changed
+  when: dhcpd_conf_templating.changed
+  ansible.builtin.service:
+    name: dhcpd
+    state: restarted
+- name: Template the HTTPD Configuration file
+  when: enable_http
+  ansible.builtin.template:
+    src: httpd.conf.j2
+    dest: /etc/httpd/conf/httpd.conf
+    owner: root
+    group: root
+    mode: 0644
+    backup: true
+  register: httpd_conf_templating
+- name: Allow HTTP through the firewall
+  when: enable_http
+  ansible.posix.firewalld:
+    service: http
+    permanent: yes
+    state: enabled
+- name: Enable and Start HTTPD
+  when: enable_http
+  ansible.builtin.service:
+    name: httpd
+    state: started
+    enabled: yes
+- name: Restart the HTTPD service if the configuration file changed
+  when: httpd_conf_templating.changed
+  ansible.builtin.service:
+    name: httpd
+    state: restarted
+- name: Template the VSFTPd Configuration file
+  when: enable_ftp
+  ansible.builtin.template:
+    src: vsftpd.conf.j2
+    dest: /etc/vsftpd/vsftpd.conf
+    owner: root
+    group: root
+    mode: 0644
+    backup: true
+  register: vsftpd_conf_templating
+- name: Allow FTP through the firewall
+  when: enable_ftp
+  ansible.builtin.firewalld:
+    service: ftp
+    permanent: yes
+    state: enabled
+- name: Enable the needed SELinux Boolean(s)
+  when: enable_ftp
+  ansible.posix.seboolean:
+    name: "{{ seb_item }}"
+    state: yes
+    persistent: yes
+  loop:
+    - ftpd_full_access
+  loop_control:
+    loop_var: seb_item
+- name: Enable and Start VSFTPd
+  when: enable_ftp
+  ansible.builtin.service:
+    name: vsftpd
+    state: started
+    enabled: yes
+- name: Restart the VSFTPd service if the configuration file changed
+  when: vsftpd_conf_templating.changed
+  ansible.builtin.service:
+    name: vsftpd
+    state: restarted
+- name: Ensure the TFTP Service Override path exists
+  when: enable_tftp
+  ansible.builtin.file:
+    path: /etc/systemd/system/tftp.service.d
+    state: directory
+    mode: 0755
+    owner: root
+    group: root
+- name: Template the TFTP Service Override Config File
+  when: enable_tftp
+  ansible.builtin.template:
+    src: tftp.service.d-override.conf.j2
+    dest: /etc/systemd/system/tftp.service.d/override.conf
+    owner: root
+    group: root
+    mode: 0644
+    backup: true
+- name: Allow TFTP through the firewall
+  when: enable_tftp
+  ansible.posix.firewalld:
+    service: tftp
+    permanent: yes
+    state: enabled
+- name: Enable the needed SELinux Boolean(s)
+  when: enable_tftp
+  ansible.posix.seboolean:
+    name: "{{ seb_item }}"
+    state: yes
+    persistent: yes
+  loop:
+    - tftp_home_dir
+  loop_control:
+    loop_var: seb_item
+- name: Enable and Start TFTP
+  when: enable_tftp
+  ansible.builtin.service:
+    name: tftp.service
+    state: started
+    enabled: yes
+- name: Template the NFS Exports File
+  when: enable_nfs
+  ansible.builtin.template:
+    src: nfs-exports.j2
+    dest: /etc/exports
+    owner: root
+    group: root
+    mode: 0644
+    backup: true
+  register: nfs_exports_templating
+- name: Allow NFS through the firewall
+  when: enable_nfs
+  ansible.posix.firewalld:
+    service: "{{ fw_items }}"
+    permanent: yes
+    state: enabled
+  loop:
+    - nfs
+    - nfs3
+    - mountd
+    - rpc-bind
+  loop_control:
+    loop_var: fw_items
+- name: Enable the needed SELinux Boolean(s)
+  when: enable_nfs
+  ansible.posix.seboolean:
+    name: "{{ seb_item }}"
+    state: yes
+    persistent: yes
+  loop:
+    - nfs_export_all_rw
+  loop_control:
+    loop_var: seb_item
+- name: Enable the NFS Services
+  when: enable_nfs
+  ansible.builtin.service:
+    name: "{{ svc_items }}"
+    state: started
+    enabled: yes
+  loop:
+    - nfs-server
+    - rpcbind
+  loop_control:
+    loop_var: svc_items
+- name: Export the NFS Shares
+  when: nfs_exports_templating.changed
+  command: exportfs -rav

@@ -70,7 +70,8 @@ distros:
     efi_loader_path: EFI/BOOT/ # trailing slash is important!
     isoURL: http://10.1.0.2/iso/AlmaLinux-8.8-x86_64-boot.iso
     protocol: ftp
-    boot_methods:
+    boot_methods: 
+      - BIOS
       - EFI
     efi_options:
       - gui-install
@@ -90,7 +91,8 @@ distros:
     efi_loader_path: EFI/BOOT/ # trailing slash is important!
     isoURL: http://10.1.0.2/iso/AlmaLinux-9.2-x86_64-boot.iso
     protocol: ftp
-    boot_methods:
+    boot_methods: 
+      - BIOS
       - EFI
     efi_options:
       - gui-install
@@ -110,7 +112,8 @@ distros:
     efi_loader_path: EFI/BOOT/ # trailing slash is important!
     isoURL: http://10.1.0.2/iso/Rocky-8.8-x86_64-boot.iso
     protocol: ftp
-    boot_methods:
+    boot_methods: 
+      - BIOS
       - EFI
     efi_options:
       - gui-install
@@ -130,7 +133,8 @@ distros:
     efi_loader_path: EFI/BOOT/ # trailing slash is important!
     isoURL: http://10.1.0.2/iso/Rocky-9.2-x86_64-boot.iso
     protocol: ftp
-    boot_methods:
+    boot_methods: 
+      - BIOS
       - EFI
     efi_options:
       - gui-install
@@ -158,7 +162,6 @@ distros:
       - gui-install
       - text-install
       - linux-rescue
-
   - name: rhel9
     displayName: Red Hat Enterprise Linux 9.2
     family: rhel 
@@ -173,6 +176,7 @@ distros:
     isoURL: http://10.1.0.2/iso/rhel-9.2-x86_64-boot.iso
     protocol: http
     boot_methods:
+      - BIOS
       - EFI
     efi_options:
       - gui-install
